@@ -4,8 +4,8 @@ This file persists SDLC phase, ownership, and handoff history so agents can coor
 
 ## Current project state
 
-- `current_phase`: design-to-implementation
-- `active_agents`: ["sdlc-manager", "feature-developer"]
+- `current_phase`: implementation-to-testing
+- `active_agents`: ["sdlc-manager", "test-specialist"]
 - `blocked_tasks`: []
 
 Agents must update this section when they change phase, become active, or encounter blockers.
@@ -33,6 +33,23 @@ A chronological list of JSON objects describing ownership transfers. Append new 
     "trigger": "Requirements complete and validated; ready for technical design",
     "timestamp": "2025-11-23T13:15:00Z",
     "validation": "Implementation planner confirmed architecture is sufficiently detailed and technology stack is appropriate"
+  },
+  {
+    "from_agent": "implementation-planner",
+    "to_agent": "feature-developer",
+    "phase": "design-to-implementation",
+    "artefacts": [
+      "src/commands/",
+      "src/services/",
+      "src/models/",
+      "src/utils/",
+      "src/graphql/",
+      "package.json",
+      "tsconfig.json"
+    ],
+    "trigger": "Architecture approved; ready to implement core functionality",
+    "timestamp": "2025-11-23T13:30:00Z",
+    "validation": "Feature developer completed implementation of all core commands and services; build and tests passing"
   }
 ]
 ```

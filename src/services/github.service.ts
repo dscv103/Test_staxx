@@ -33,7 +33,9 @@ export class GitHubService {
 
   async getAuthenticatedUser(): Promise<User> {
     try {
-      const result: any = await this.graphqlClient(GET_VIEWER);
+      const result = await this.graphqlClient(GET_VIEWER) as {
+        viewer: { login: string; name: string | null; email: string | null };
+      };
       return {
         login: result.viewer.login,
         name: result.viewer.name || result.viewer.login,
@@ -47,10 +49,17 @@ export class GitHubService {
   // Repository operations
   async getRepository(owner: string, name: string): Promise<Repository> {
     try {
-      const result: any = await this.graphqlClient(GET_REPOSITORY, {
+      const result = await this.graphqlClient(GET_REPOSITORY, {
         owner,
         name,
-      });
+      }) as {
+        repository: {
+          id: string;
+          name: string;
+          owner: { login: string };
+          defaultBranchRef: { name: string } | null;
+        };
+      };
 
       const repo = result.repository;
       return {
@@ -75,7 +84,7 @@ export class GitHubService {
     baseRefName: string;
   }): Promise<PullRequest> {
     try {
-      const result: any = await this.graphqlClient(CREATE_PULL_REQUEST, {
+      const result = await this.graphqlClient(CREATE_PULL_REQUEST, {
         input: {
           repositoryId: params.repositoryId,
           title: params.title,
@@ -83,7 +92,16 @@ export class GitHubService {
           headRefName: params.headRefName,
           baseRefName: params.baseRefName,
         },
-      });
+      }) as {
+        createPullRequest: {
+          pullRequest: {
+            id: string;
+            number: number;
+            title: string;
+            url: string;
+          };
+        };
+      };
 
       const pr = result.createPullRequest.pullRequest;
       return {
@@ -103,11 +121,24 @@ export class GitHubService {
 
   async getPullRequest(owner: string, name: string, number: number): Promise<PullRequest> {
     try {
-      const result: any = await this.graphqlClient(GET_PULL_REQUEST, {
+      const result = await this.graphqlClient(GET_PULL_REQUEST, {
         owner,
         name,
         number,
-      });
+      }) as {
+        repository: {
+          pullRequest: {
+            id: string;
+            number: number;
+            title: string;
+            body: string;
+            state: 'OPEN' | 'CLOSED' | 'MERGED';
+            url: string;
+            headRefName: string;
+            baseRefName: string;
+          };
+        };
+      };
 
       const pr = result.repository.pullRequest;
       return {
@@ -131,15 +162,30 @@ export class GitHubService {
     first: number = 10
   ): Promise<PullRequest[]> {
     try {
-      const result: any = await this.graphqlClient(LIST_PULL_REQUESTS, {
+      const result = await this.graphqlClient(LIST_PULL_REQUESTS, {
         owner,
         name,
         first,
         after: null,
-      });
+      }) as {
+        repository: {
+          pullRequests: {
+            nodes: Array<{
+              id: string;
+              number: number;
+              title: string;
+              body: string;
+              state: 'OPEN' | 'CLOSED' | 'MERGED';
+              url: string;
+              headRefName: string;
+              baseRefName: string;
+            }>;
+          };
+        };
+      };
 
       const prs = result.repository.pullRequests.nodes;
-      return prs.map((pr: any) => ({
+      return prs.map((pr) => ({
         id: pr.id,
         number: pr.number,
         title: pr.title,

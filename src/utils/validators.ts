@@ -12,8 +12,9 @@ export function validateBranchName(name: string): void {
     /\/$/,            // Cannot end with /
     /\.lock$/,        // Cannot end with .lock
     /@\{/,            // Cannot contain @{
+    // eslint-disable-next-line no-control-regex
     /[\x00-\x1f\x7f]/, // No control characters
-    /[~^:?*\[\\]/,    // No special characters
+    /[~^:?*[\\\]]/,    // No special characters
     /\s/,             // No whitespace
   ];
 

@@ -22,7 +22,7 @@ export function createAuthCommand(configService: ConfigService): Command {
         }
 
         // Get token
-        let token = options.token;
+        const token = options.token;
 
         if (!token) {
           // Check if already authenticated

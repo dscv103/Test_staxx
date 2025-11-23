@@ -31,7 +31,7 @@ export class ConfigService {
   }
 
   async clearToken(): Promise<void> {
-    // @ts-ignore - token is not in GraphiteConfig but stored separately
+    // @ts-expect-error - token is not in GraphiteConfig but stored separately
     this.config.delete('token');
   }
 

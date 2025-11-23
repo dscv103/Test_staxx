@@ -14,7 +14,6 @@ export class ConfigService {
     // Global config for auth token
     this.config = new Conf<AuthConfig>({
       projectName: 'graphite-cli-clone',
-      encryptionKey: 'graphite-cli-secure-key-2024',
     });
 
     // Local config for repository-specific settings

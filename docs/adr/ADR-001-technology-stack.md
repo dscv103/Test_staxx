@@ -118,7 +118,7 @@ We will use **TypeScript/Node.js** as the primary technology stack with the foll
     "commander": "^11.0.0",
     "@octokit/graphql": "^7.0.0",
     "simple-git": "^3.20.0",
-    "conf": "^11.0.0",
+    "conf": "^12.0.0",
     "chalk": "^5.0.0"
   },
   "devDependencies": {

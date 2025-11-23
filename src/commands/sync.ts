@@ -1,0 +1,64 @@
+import { Command } from 'commander';
+import { GitService } from '../services/git.service.js';
+import { ConfigService } from '../services/config.service.js';
+import { StackService } from '../services/stack.service.js';
+import { Logger } from '../utils/logger.js';
+import { ConfigError } from '../utils/errors.js';
+
+export function createSyncCommand(
+  gitService: GitService,
+  configService: ConfigService,
+  stackService: StackService
+): Command {
+  const command = new Command('sync');
+
+  command
+    .description('Synchronize the current branch and its stack with remote')
+    .action(async () => {
+      try {
+        // Check if initialized
+        if (!(await configService.isInitialized())) {
+          throw new ConfigError('Repository not initialized. Run "gt init" first.');
+        }
+
+        // Check if working directory is clean
+        if (!(await gitService.isClean())) {
+          throw new ConfigError(
+            'Working directory has uncommitted changes. Please commit or stash them first.'
+          );
+        }
+
+        const currentBranch = await gitService.getCurrentBranch();
+
+        Logger.info('Fetching latest changes...');
+        await gitService.fetch();
+
+        // Get all branches in the stack
+        const upstream = await stackService.getUpstreamBranches(currentBranch);
+        const downstream = await stackService.getDownstreamBranches(currentBranch);
+        const allBranches = [...upstream, currentBranch, ...downstream];
+
+        Logger.info(`Syncing ${allBranches.length} branch(es) in stack...`);
+
+        for (const branch of allBranches) {
+          try {
+            await gitService.checkoutBranch(branch);
+            await gitService.pull(branch);
+            Logger.success(`Synced: ${branch}`);
+          } catch (error) {
+            Logger.warn(`Failed to sync ${branch}: ${(error as Error).message}`);
+          }
+        }
+
+        // Return to original branch
+        await gitService.checkoutBranch(currentBranch);
+
+        Logger.success('Stack synchronized successfully!');
+      } catch (error) {
+        Logger.error((error as Error).message);
+        process.exit(1);
+      }
+    });
+
+  return command;
+}

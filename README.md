@@ -13,11 +13,7 @@ A command-line tool for managing stacked pull requests using GitHub's GraphQL AP
 
 ## Installation
 
-```bash
-npm install -g graphite-cli-clone
-```
-
-Or run from source:
+**Note: This package is not yet published to npm. Please install from source:**
 
 ```bash
 git clone <repository-url>
@@ -26,6 +22,8 @@ npm install
 npm run build
 npm link
 ```
+
+After installation, the `gt` command will be available globally.
 
 ## Quick Start
 

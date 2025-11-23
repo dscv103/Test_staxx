@@ -3,7 +3,7 @@ import { GitService } from '../services/git.service.js';
 import { ConfigService } from '../services/config.service.js';
 import { GitHubService } from '../services/github.service.js';
 import { Logger } from '../utils/logger.js';
-import { ConfigError } from '../utils/errors.js';
+import { ConfigError, ValidationError } from '../utils/errors.js';
 
 export function createSubmitCommand(
   gitService: GitService,
@@ -42,6 +42,13 @@ export function createSubmitCommand(
         const branchMetadata = await configService.getBranchMetadata(currentBranch);
         const baseBranch =
           options.base || branchMetadata?.parent || repoConfig.defaultBranch;
+
+        // Validate that head and base branch are different
+        if (currentBranch === baseBranch) {
+          throw new ValidationError(
+            `Cannot create PR: head branch "${currentBranch}" is the same as base branch "${baseBranch}"`
+          );
+        }
 
         // Check if branch has changes to push
         try {

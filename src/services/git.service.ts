@@ -47,7 +47,9 @@ export class GitService {
   async isGitHubRepository(): Promise<boolean> {
     try {
       const url = await this.getRemoteUrl();
-      return url.includes('github.com');
+      // Use parseGitHubUrl to properly validate the URL format
+      const parsed = parseGitHubUrl(url);
+      return parsed !== null;
     } catch {
       return false;
     }

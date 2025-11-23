@@ -38,8 +38,15 @@ export function validateGitHubToken(token: string): void {
 
 export function parseGitHubUrl(url: string): { owner: string; repo: string } | null {
   // Support HTTPS and SSH formats
-  const httpsPattern = /github\.com[:/]([^/]+)\/([^/.]+)(\.git)?$/;
-  const match = url.match(httpsPattern);
+  // HTTPS: https://github.com/owner/repo or https://github.com/owner/repo.git
+  // SSH: git@github.com:owner/repo or git@github.com:owner/repo.git
+  const httpsPattern = /github\.com\/([^/]+)\/([^/.]+)(\.git)?$/;
+  const sshPattern = /github\.com:([^/]+)\/([^/.]+)(\.git)?$/;
+  
+  let match = url.match(httpsPattern);
+  if (!match) {
+    match = url.match(sshPattern);
+  }
 
   if (match) {
     return {

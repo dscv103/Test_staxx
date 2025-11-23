@@ -3,7 +3,7 @@ import { GitService } from '../services/git.service.js';
 import { ConfigService } from '../services/config.service.js';
 import { GitHubService } from '../services/github.service.js';
 import { Logger } from '../utils/logger.js';
-import { ConfigError, GitError } from '../utils/errors.js';
+import { ConfigError } from '../utils/errors.js';
 
 export function createSubmitCommand(
   gitService: GitService,
@@ -48,8 +48,14 @@ export function createSubmitCommand(
           await gitService.push(currentBranch, true);
           Logger.info(`Pushed ${currentBranch} to remote`);
         } catch (error) {
-          // Branch might already be pushed
-          Logger.verbose(`Branch already pushed or no changes to push`, true);
+          // Branch might already be pushed or no changes
+          const errorMsg = (error as Error).message;
+          if (errorMsg.includes('up-to-date') || errorMsg.includes('nothing to commit')) {
+            Logger.verbose(`Branch already up-to-date`, true);
+          } else {
+            // Re-throw if it's a different error
+            throw error;
+          }
         }
 
         // Create GitHub service
@@ -85,9 +91,6 @@ export function createSubmitCommand(
         Logger.info(`URL: ${pr.url}`);
         Logger.info(`Base: ${baseBranch} ← Head: ${currentBranch}`);
       } catch (error) {
-        if (error instanceof GitError && error.message.includes('Everything up-to-date')) {
-          Logger.warn('No changes to push');
-        }
         Logger.error((error as Error).message);
         process.exit(1);
       }

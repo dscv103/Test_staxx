@@ -2,13 +2,17 @@ import Conf from 'conf';
 import { GraphiteConfig, BranchMetadata } from '../models/index.js';
 import { ConfigError } from '../utils/errors.js';
 
+interface AuthConfig {
+  token?: string;
+}
+
 export class ConfigService {
-  private config: Conf<GraphiteConfig>;
+  private config: Conf<AuthConfig>;
   private localConfig: Conf<GraphiteConfig>;
 
   constructor() {
     // Global config for auth token
-    this.config = new Conf({
+    this.config = new Conf<AuthConfig>({
       projectName: 'graphite-cli-clone',
       encryptionKey: 'graphite-cli-secure-key-2024',
     });
@@ -23,7 +27,7 @@ export class ConfigService {
 
   // Authentication methods
   async getToken(): Promise<string | null> {
-    return this.config.get('token', null) as string | null;
+    return this.config.get('token') || null;
   }
 
   async setToken(token: string): Promise<void> {
@@ -31,7 +35,6 @@ export class ConfigService {
   }
 
   async clearToken(): Promise<void> {
-    // @ts-expect-error - token is not in GraphiteConfig but stored separately
     this.config.delete('token');
   }
 

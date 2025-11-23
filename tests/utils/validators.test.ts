@@ -1,4 +1,4 @@
-import { validateBranchName, validateGitHubToken, parseGitHubUrl } from '../../src/utils/validators';
+import { validateBranchName, validateGitHubToken, parseGitHubUrl } from '../../src/utils/validators.js';
 import { ValidationError } from '../../src/utils/errors';
 
 describe('validators', () => {

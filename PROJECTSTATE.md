@@ -4,8 +4,8 @@ This file persists SDLC phase, ownership, and handoff history so agents can coor
 
 ## Current project state
 
-- `current_phase`: start
-- `active_agents`: []
+- `current_phase`: design-to-implementation
+- `active_agents`: ["sdlc-manager", "feature-developer"]
 - `blocked_tasks`: []
 
 Agents must update this section when they change phase, become active, or encounter blockers.
@@ -15,7 +15,26 @@ Agents must update this section when they change phase, become active, or encoun
 A chronological list of JSON objects describing ownership transfers. Append new entries; never edit history.
 
 ```json
-[]
+[
+  {
+    "from_agent": "sdlc-manager",
+    "to_agent": "requirements-analyst",
+    "phase": "planning-to-requirements",
+    "artefacts": ["REQUIREMENTS.md"],
+    "trigger": "Initial project scope defined from problem statement",
+    "timestamp": "2025-11-23T13:08:29Z",
+    "validation": "Requirements analyst confirmed project goals, functional requirements, and acceptance criteria are clear"
+  },
+  {
+    "from_agent": "requirements-analyst",
+    "to_agent": "implementation-planner",
+    "phase": "requirements-to-design",
+    "artefacts": ["SOLUTIONPLAN.md", "docs/adr/ADR-001-technology-stack.md"],
+    "trigger": "Requirements complete and validated; ready for technical design",
+    "timestamp": "2025-11-23T13:15:00Z",
+    "validation": "Implementation planner confirmed architecture is sufficiently detailed and technology stack is appropriate"
+  }
+]
 ```
 
 ## Conventions

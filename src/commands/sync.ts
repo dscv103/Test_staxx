@@ -40,19 +40,24 @@ export function createSyncCommand(
 
         Logger.info(`Syncing ${allBranches.length} branch(es) in stack...`);
 
-        for (const branch of allBranches) {
+        try {
+          for (const branch of allBranches) {
+            try {
+              await gitService.checkoutBranch(branch);
+              await gitService.pull(branch);
+              Logger.success(`Synced: ${branch}`);
+            } catch (error) {
+              Logger.warn(`Failed to sync ${branch}: ${(error as Error).message}`);
+            }
+          }
+        } finally {
+          // Always attempt to return to original branch
           try {
-            await gitService.checkoutBranch(branch);
-            await gitService.pull(branch);
-            Logger.success(`Synced: ${branch}`);
-          } catch (error) {
-            Logger.warn(`Failed to sync ${branch}: ${(error as Error).message}`);
+            await gitService.checkoutBranch(currentBranch);
+          } catch (checkoutError) {
+            Logger.error(`Failed to return to original branch ${currentBranch}: ${(checkoutError as Error).message}`);
           }
         }
-
-        // Return to original branch
-        await gitService.checkoutBranch(currentBranch);
-
         Logger.success('Stack synchronized successfully!');
       } catch (error) {
         Logger.error((error as Error).message);

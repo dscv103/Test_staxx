@@ -153,19 +153,36 @@ export class GitService {
 
   // Commit operations
   async getDefaultBranch(): Promise<string> {
+    // 1. Try to get default branch from local config
     try {
-      // Try to get the default branch from remote
+      const configResult = await this.git.raw(['config', '--get', 'init.defaultBranch']);
+      const configBranch = configResult.trim();
+      if (configBranch) {
+        return configBranch;
+      }
+    } catch {
+      // Ignore error, proceed to next method
+    }
+    // 2. Try to get the default branch from remote
+    try {
       await this.fetch();
       const result = await this.git.raw(['symbolic-ref', 'refs/remotes/origin/HEAD']);
       const match = result.match(/refs\/remotes\/origin\/(.+)/);
-      return match ? match[1].trim() : 'main';
+      if (match) {
+        return match[1].trim();
+      }
     } catch {
-      // Fallback to common default branch names
+      // Ignore error, proceed to fallback
+    }
+    // 3. Fallback to common default branch names, handle getBranches errors
+    try {
       const branches = await this.getBranches();
       if (branches.includes('main')) return 'main';
       if (branches.includes('master')) return 'master';
-      return 'main';
+    } catch {
+      // Ignore error, fallback to 'main'
     }
+    return 'main';
   }
 
   async getCommitHash(ref: string = 'HEAD'): Promise<string> {

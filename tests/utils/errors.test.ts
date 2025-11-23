@@ -1,4 +1,4 @@
-import { GraphiteError, GitError, GitHubError, ConfigError, ValidationError } from '../../src/utils/errors';
+import { GraphiteError, GitError, GitHubError, ConfigError, ValidationError } from '../../src/utils/errors.js';
 
 describe('errors', () => {
   describe('GraphiteError', () => {

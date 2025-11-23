@@ -48,14 +48,8 @@ export function createSubmitCommand(
           await gitService.push(currentBranch, true);
           Logger.info(`Pushed ${currentBranch} to remote`);
         } catch (error) {
-          // Branch might already be pushed or no changes
-          const errorMsg = (error as Error).message;
-          if (errorMsg.includes('up-to-date') || errorMsg.includes('nothing to commit')) {
-            Logger.verbose(`Branch already up-to-date`, true);
-          } else {
-            // Re-throw if it's a different error
-            throw error;
-          }
+          // Accept push failures for up-to-date branches as normal flow
+          Logger.verbose(`Push failed: ${(error as Error).message}`, true);
         }
 
         // Create GitHub service

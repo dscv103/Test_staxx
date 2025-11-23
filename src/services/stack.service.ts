@@ -57,12 +57,18 @@ export class StackService {
     await this.configService.saveBranchMetadata(branchName, metadata);
 
     // Update parent's children list
-    const parentMetadata = await this.configService.getBranchMetadata(parentBranch);
-    if (parentMetadata) {
-      if (!parentMetadata.children.includes(branchName)) {
-        parentMetadata.children.push(branchName);
-        await this.configService.saveBranchMetadata(parentBranch, parentMetadata);
-      }
+    let parentMetadata = await this.configService.getBranchMetadata(parentBranch);
+    if (!parentMetadata) {
+      // Create metadata for parent if it doesn't exist (e.g., main/master)
+      parentMetadata = {
+        parent: null,
+        children: [branchName],
+        lastSynced: new Date().toISOString(),
+      };
+      await this.configService.saveBranchMetadata(parentBranch, parentMetadata);
+    } else if (!parentMetadata.children.includes(branchName)) {
+      parentMetadata.children.push(branchName);
+      await this.configService.saveBranchMetadata(parentBranch, parentMetadata);
     }
   }
 

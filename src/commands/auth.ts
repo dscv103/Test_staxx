@@ -40,7 +40,7 @@ export function createAuthCommand(configService: ConfigService): Command {
           }
 
           throw new ValidationError(
-            'Please provide a GitHub token using: gt auth --token YOUR_TOKEN\n' +
+            'Please provide a GitHub token using: stax auth --token YOUR_TOKEN\n' +
               'Create a token at: https://github.com/settings/tokens'
           );
         }

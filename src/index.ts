@@ -23,7 +23,7 @@ async function main() {
 
   // Configure CLI
   program
-    .name('gt')
+    .name('stax')
     .description('Graphite CLI Clone - Manage stacked pull requests with ease')
     .version('1.0.0');
 
@@ -39,7 +39,7 @@ async function main() {
   // Handle unknown commands
   program.on('command:*', () => {
     Logger.error(`Unknown command: ${program.args.join(' ')}`);
-    Logger.info('Run "gt --help" for available commands.');
+    Logger.info('Run "stax --help" for available commands.');
     process.exit(1);
   });
 

@@ -23,19 +23,19 @@ npm run build
 npm link
 ```
 
-After installation, the `gt` command will be available globally.
+After installation, the `stax` command will be available globally.
 
 ## Quick Start
 
 1. **Initialize Graphite in your repository:**
    ```bash
    cd your-repository
-   gt init
+   stax init
    ```
 
 2. **Authenticate with GitHub:**
    ```bash
-   gt auth --token YOUR_GITHUB_TOKEN
+   stax auth --token YOUR_GITHUB_TOKEN
    ```
    
    Create a GitHub Personal Access Token at: https://github.com/settings/tokens
@@ -44,76 +44,76 @@ After installation, the `gt` command will be available globally.
 
 3. **Create a branch:**
    ```bash
-   gt create feature/my-feature
+   stax create feature/my-feature
    ```
 
 4. **Submit a PR:**
    ```bash
-   gt submit --title "My Feature" --body "Description of changes"
+   stax submit --title "My Feature" --body "Description of changes"
    ```
 
 5. **View your stack:**
    ```bash
-   gt stack
+   stax stack
    ```
 
 ## Commands
 
-### `gt init`
+### `stax init`
 Initialize Graphite in the current Git repository.
 
 ```bash
-gt init
+stax init
 ```
 
-### `gt auth`
+### `stax auth`
 Authenticate with GitHub using a personal access token.
 
 ```bash
 # Login
-gt auth --token YOUR_TOKEN
+stax auth --token YOUR_TOKEN
 
 # Check authentication status
-gt auth
+stax auth
 
 # Logout
-gt auth --logout
+stax auth --logout
 ```
 
-### `gt create <branch-name>`
+### `stax create <branch-name>`
 Create a new branch in the stack.
 
 ```bash
 # Create branch from current branch
-gt create feature/my-feature
+stax create feature/my-feature
 
 # Create branch from specific parent
-gt create feature/child-feature --parent feature/my-feature
+stax create feature/child-feature --parent feature/my-feature
 ```
 
-### `gt submit`
+### `stax submit`
 Create a pull request for the current branch.
 
 ```bash
 # Submit with auto-generated title
-gt submit
+stax submit
 
 # Submit with custom title and description
-gt submit --title "Feature: Add login" --body "Implements user login functionality"
+stax submit --title "Feature: Add login" --body "Implements user login functionality"
 
 # Submit with custom base branch
-gt submit --base main
+stax submit --base main
 ```
 
-### `gt stack`
+### `stax stack`
 Display the current branch stack as a visual tree.
 
 ```bash
 # Show stack for current branch
-gt stack
+stax stack
 
 # Show stack for specific branch
-gt stack --branch feature/my-feature
+stax stack --branch feature/my-feature
 ```
 
 Example output:
@@ -125,11 +125,11 @@ Branch Stack:
    └─ feature/database
 ```
 
-### `gt sync`
+### `stax sync`
 Synchronize the current branch stack with the remote repository.
 
 ```bash
-gt sync
+stax sync
 ```
 
 This command:
@@ -137,14 +137,14 @@ This command:
 - Pulls updates for all branches in the stack
 - Returns to the original branch
 
-### `gt checkout <branch-name>`
+### `stax checkout <branch-name>`
 Switch to a different branch.
 
 ```bash
-gt checkout feature/my-feature
+stax checkout feature/my-feature
 
 # Using alias
-gt co feature/my-feature
+stax co feature/my-feature
 ```
 
 ## Workflow Example
@@ -156,34 +156,34 @@ Here's a typical workflow for building a feature with stacked PRs:
 git checkout main
 
 # 2. Initialize Graphite (first time only)
-gt init
+stax init
 
 # 3. Authenticate (first time only)
-gt auth --token ghp_your_token_here
+stax auth --token ghp_your_token_here
 
 # 4. Create first branch for database changes
-gt create feature/database-schema
+stax create feature/database-schema
 # ... make changes ...
 git add .
 git commit -m "Add database schema"
-gt submit --title "Database Schema" --body "Initial database structure"
+stax submit --title "Database Schema" --body "Initial database structure"
 
 # 5. Create second branch for API (depends on database)
-gt create feature/api-endpoints
+stax create feature/api-endpoints
 # ... make changes ...
 git add .
 git commit -m "Add API endpoints"
-gt submit --title "API Endpoints" --body "RESTful API implementation"
+stax submit --title "API Endpoints" --body "RESTful API implementation"
 
 # 6. Create third branch for UI (depends on API)
-gt create feature/ui-components
+stax create feature/ui-components
 # ... make changes ...
 git add .
 git commit -m "Add UI components"
-gt submit --title "UI Components" --body "User interface implementation"
+stax submit --title "UI Components" --body "User interface implementation"
 
 # 7. View the entire stack
-gt stack
+stax stack
 # Output:
 # └─ main
 #    └─ feature/database-schema [PR #101]
@@ -191,7 +191,7 @@ gt stack
 #          └─ feature/ui-components (current) [PR #103]
 
 # 8. Synchronize all branches
-gt sync
+stax sync
 ```
 
 ## Configuration
@@ -280,13 +280,13 @@ npm run format
 ## Troubleshooting
 
 ### "Not authenticated" error
-Make sure you've run `gt auth --token YOUR_TOKEN` with a valid GitHub personal access token.
+Make sure you've run `stax auth --token YOUR_TOKEN` with a valid GitHub personal access token.
 
 ### "Not a git repository" error
 Run `git init` to initialize a Git repository first, or navigate to an existing Git repository.
 
 ### "Not initialized" error
-Run `gt init` to initialize Graphite in the repository.
+Run `stax init` to initialize Graphite in the repository.
 
 ### "Remote not found" error
 Make sure your repository has a GitHub remote configured:

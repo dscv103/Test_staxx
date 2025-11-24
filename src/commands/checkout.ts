@@ -18,7 +18,7 @@ export function createCheckoutCommand(
       try {
         // Check if initialized
         if (!(await configService.isInitialized())) {
-          throw new ConfigError('Repository not initialized. Run "gt init" first.');
+          throw new ConfigError('Repository not initialized. Run "stax init" first.');
         }
 
         // Check if branch exists

@@ -32,7 +32,7 @@ This document outlines the technical design and implementation approach for buil
 ```
 ┌─────────────────┐
 │   CLI Entry     │
-│   (gt command)  │
+│  (stax command) │
 └────────┬────────┘
          │
          ▼
@@ -335,7 +335,7 @@ mutation UpdatePullRequest($input: UpdatePullRequestInput!) {
 
 ## Command Implementation Details
 
-### gt init
+### stax init
 1. Verify current directory is a git repository
 2. Verify remote is GitHub
 3. Parse owner/repo from remote URL
@@ -343,13 +343,13 @@ mutation UpdatePullRequest($input: UpdatePullRequestInput!) {
 5. Initialize config file
 6. Validate GitHub access (if token exists)
 
-### gt auth
+### stax auth
 1. Prompt for GitHub personal access token
 2. Validate token with GitHub API
 3. Store encrypted token in config
 4. Display authenticated user info
 
-### gt create <branch-name>
+### stax create <branch-name>
 1. Verify repository is initialized
 2. Get current branch as parent
 3. Create new git branch
@@ -357,7 +357,7 @@ mutation UpdatePullRequest($input: UpdatePullRequestInput!) {
 5. Checkout new branch
 6. Display success message
 
-### gt submit [--title] [--body]
+### stax submit [--title] [--body]
 1. Verify current branch
 2. Check for uncommitted changes
 3. Push branch to remote
@@ -366,7 +366,7 @@ mutation UpdatePullRequest($input: UpdatePullRequestInput!) {
 6. Update local stack metadata with PR number
 7. Display PR URL
 
-### gt stack
+### stax stack
 1. Get current branch
 2. Load stack metadata
 3. Build tree structure
@@ -374,7 +374,7 @@ mutation UpdatePullRequest($input: UpdatePullRequestInput!) {
 5. Highlight current branch
 6. Show PR status for each branch
 
-### gt sync
+### stax sync
 1. Get current branch and stack
 2. Fetch latest from remote
 3. Rebase each branch in stack order
@@ -504,7 +504,7 @@ npm run lint
 ### CLI Installation
 ```bash
 npm install -g graphite-cli-clone
-gt --version
+stax --version
 ```
 
 ## Development Workflow
@@ -525,12 +525,12 @@ gt --version
 - [ ] Test API integration
 
 ### Phase 4: Command Implementation
-- [ ] Implement gt init
-- [ ] Implement gt auth
-- [ ] Implement gt create
-- [ ] Implement gt submit
-- [ ] Implement gt stack
-- [ ] Implement gt sync
+- [ ] Implement stax init
+- [ ] Implement stax auth
+- [ ] Implement stax create
+- [ ] Implement stax submit
+- [ ] Implement stax stack
+- [ ] Implement stax sync
 
 ### Phase 5: Stack Management
 - [ ] Implement Stack service

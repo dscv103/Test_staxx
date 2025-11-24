@@ -208,7 +208,12 @@ export class GitHubService {
   }): Promise<void> {
     try {
       await this.graphqlClient(UPDATE_PULL_REQUEST, {
-        input: params,
+        input: {
+          pullRequestId: params.pullRequestId,
+          ...(params.title && { title: params.title }),
+          ...(params.body && { body: params.body }),
+          ...(params.baseRefName && { baseRefName: params.baseRefName }),
+        },
       });
     } catch (error) {
       throw new GitHubError(`Failed to update pull request: ${(error as Error).message}`);

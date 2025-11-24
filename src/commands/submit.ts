@@ -20,13 +20,13 @@ export function createSubmitCommand(
       try {
         // Check if initialized
         if (!(await configService.isInitialized())) {
-          throw new ConfigError('Repository not initialized. Run "gt init" first.');
+          throw new ConfigError('Repository not initialized. Run "stax init" first.');
         }
 
         // Get authentication token
         const token = await configService.getToken();
         if (!token) {
-          throw new ConfigError('Not authenticated. Run "gt auth" first.');
+          throw new ConfigError('Not authenticated. Run "stax auth" first.');
         }
 
         // Get current branch

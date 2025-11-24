@@ -72,6 +72,7 @@ export function createSyncCommand(
             `Stack synchronized with ${failedBranches.length} warning(s). ` +
             `Failed branches: ${failedBranches.join(', ')}`
           );
+          process.exit(2);
         }
       } catch (error) {
         Logger.error((error as Error).message);

@@ -40,6 +40,7 @@ export function createSyncCommand(
 
         Logger.info(`Syncing ${allBranches.length} branch(es) in stack...`);
 
+        const failedBranches: string[] = [];
         try {
           for (const branch of allBranches) {
             try {
@@ -47,6 +48,7 @@ export function createSyncCommand(
               await gitService.pull(branch);
               Logger.success(`Synced: ${branch}`);
             } catch (error) {
+              failedBranches.push(branch);
               Logger.warn(`Failed to sync ${branch}: ${(error as Error).message}`);
             }
           }
@@ -58,7 +60,19 @@ export function createSyncCommand(
             Logger.error(`Failed to return to original branch ${currentBranch}: ${(checkoutError as Error).message}`);
           }
         }
-        Logger.success('Stack synchronized successfully!');
+
+        // Report final status based on sync results
+        if (failedBranches.length === 0) {
+          Logger.success('Stack synchronized successfully!');
+        } else if (failedBranches.length === allBranches.length) {
+          Logger.error(`Failed to sync all ${allBranches.length} branch(es) in stack.`);
+          process.exit(1);
+        } else {
+          Logger.warn(
+            `Stack synchronized with ${failedBranches.length} warning(s). ` +
+            `Failed branches: ${failedBranches.join(', ')}`
+          );
+        }
       } catch (error) {
         Logger.error((error as Error).message);
         process.exit(1);

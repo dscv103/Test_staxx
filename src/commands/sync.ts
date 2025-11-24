@@ -41,6 +41,7 @@ export function createSyncCommand(
         Logger.info(`Syncing ${allBranches.length} branch(es) in stack...`);
 
         const failedBranches: string[] = [];
+        let checkoutFailed = false;
         try {
           for (const branch of allBranches) {
             try {
@@ -57,8 +58,27 @@ export function createSyncCommand(
           try {
             await gitService.checkoutBranch(currentBranch);
           } catch (checkoutError) {
-            Logger.error(`Failed to return to original branch ${currentBranch}: ${(checkoutError as Error).message}`);
+            checkoutFailed = true;
+            Logger.error(
+              `Failed to return to original branch ${currentBranch}: ${(checkoutError as Error).message}`
+            );
           }
+        }
+
+        // If checkout back to original branch failed, get current branch and exit
+        if (checkoutFailed) {
+          try {
+            const actualBranch = await gitService.getCurrentBranch();
+            Logger.error(
+              `Critical error: Unable to return to branch ${currentBranch}. ` +
+              `Currently on branch: ${actualBranch}`
+            );
+          } catch {
+            Logger.error(
+              `Critical error: Unable to return to branch ${currentBranch} and cannot determine current branch.`
+            );
+          }
+          process.exit(1);
         }
 
         // Report final status based on sync results
@@ -70,7 +90,7 @@ export function createSyncCommand(
         } else {
           Logger.warn(
             `Stack synchronized with ${failedBranches.length} warning(s). ` +
-            `Failed branches: ${failedBranches.join(', ')}`
+              `Failed branches: ${failedBranches.join(', ')}`
           );
           process.exit(2);
         }

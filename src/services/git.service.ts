@@ -151,7 +151,7 @@ export class GitService {
     }
   }
 
-  // Commit operations
+  // Branch and commit queries
   async getDefaultBranch(): Promise<string> {
     // 1. Try to get default branch from local config
     try {

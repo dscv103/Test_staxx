@@ -26,6 +26,12 @@ export function createCheckoutCommand(
           throw new ValidationError(`Branch "${branchName}" does not exist`);
         }
 
+        // Check if working directory is clean
+        if (!(await gitService.isClean())) {
+          throw new ValidationError(
+            'Working directory has uncommitted changes. Please commit or stash them first.'
+          );
+        }
         // Checkout the branch
         await gitService.checkoutBranch(branchName);
 

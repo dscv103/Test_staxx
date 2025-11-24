@@ -69,12 +69,26 @@ export function createSubmitCommand(
         );
 
         // Prepare PR title and body
-        const title = options.title || `[${currentBranch}] Feature implementation`;
-        const body =
+        const rawTitle = options.title || `[${currentBranch}] Feature implementation`;
+        const rawBody =
           options.body ||
           `## Changes\n\nThis PR contains changes from the \`${currentBranch}\` branch.\n\n` +
             `**Base branch:** ${baseBranch}`;
 
+        // Sanitize and validate PR title and body
+        const title = rawTitle.trim();
+        const body = rawBody.trim();
+        const MAX_TITLE_LENGTH = 256; // GitHub PR title limit
+        const MAX_BODY_LENGTH = 65536; // GitHub PR body limit
+        if (!title) {
+          throw new ValidationError('PR title cannot be empty. Please provide a non-empty title.');
+        }
+        if (title.length > MAX_TITLE_LENGTH) {
+          throw new ValidationError(`PR title exceeds ${MAX_TITLE_LENGTH} characters. Please shorten your title.`);
+        }
+        if (body.length > MAX_BODY_LENGTH) {
+          throw new ValidationError(`PR body exceeds ${MAX_BODY_LENGTH} characters. Please shorten your description.`);
+        }
         // Create pull request
         Logger.info('Creating pull request...');
         const pr = await githubService.createPullRequest({

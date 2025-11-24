@@ -4,7 +4,7 @@
   "description": "A Graphite CLI clone for managing stacked pull requests using GitHub GraphQL API",
   "main": "dist/index.js",
   "bin": {
-    "gt": "dist/index.js"
+    "stax": "dist/index.js"
   },
   "type": "module",
   "directories": {

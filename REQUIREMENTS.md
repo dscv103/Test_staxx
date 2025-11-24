@@ -45,13 +45,13 @@ Create a command-line tool that replicates core functionality of Graphite CLI fo
 
 ### FR6: Core Commands
 The CLI must support these essential commands:
-- `gt init` - Initialize Graphite in a repository
-- `gt auth` - Authenticate with GitHub
-- `gt create <branch>` - Create a new branch
-- `gt submit` - Create PR for current branch
-- `gt stack` - View current branch stack
-- `gt sync` - Synchronize with remote
-- `gt checkout <branch>` - Switch between branches
+- `stax init` - Initialize Graphite in a repository
+- `stax auth` - Authenticate with GitHub
+- `stax create <branch>` - Create a new branch
+- `stax submit` - Create PR for current branch
+- `stax stack` - View current branch stack
+- `stax sync` - Synchronize with remote
+- `stax checkout <branch>` - Switch between branches
 
 ## Non-Functional Requirements
 
